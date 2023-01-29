@@ -67,6 +67,10 @@ function Project() {
   }
 
   useEffect(() => {
+    if(localStorage.getItem("role")==null){
+      window.alert("Please login First!")
+      window.location.replace("/")
+    }
     getCount();
     getProjects();
   }, [ tag, order, noOfProjects, noOfStudents, noOfFaculties]);

@@ -1,3 +1,5 @@
+
+
 exports.getAllDepartment = async(req, res) => {
     const connection = req.app.get('connection');
     var { tag, order } = req.query;
@@ -24,7 +26,7 @@ exports.getADepartment = async(req, res) => {
             .join(' ');
             console.log(dname);
     order = order === '-1' ? 'DESC': 'ASC';
-    const [rows, fields] = await connection.query('select f.fname, f.email from faculty f inner join department d on f.did = d.did where d.dname = ? and f.fid != d.hod ORDER BY ' + tag + ' ' + order, [dname]);
+    const [rows, fields] = await connection.query('select f.fname, f.email, f.fid from faculty f inner join department d on f.did = d.did where d.dname = ? and f.fid != d.hod ORDER BY ' + tag + ' ' + order, [dname]);
     res.status(200).json(rows);
 }
 exports.getADepartmentStudent = async(req, res) => {
@@ -38,10 +40,36 @@ exports.getADepartmentStudent = async(req, res) => {
             .join(' ');
             console.log(dname);
     order = order === '-1' ? 'DESC': 'ASC';
-    //const [rows, fields] = await connection.query('select f.fname, f.email from faculty f inner join department d on f.did = d.did where d.dname = ? and f.fid != d.hod ORDER BY ' + tag + ' ' + order, [dname]);
-    const [stud, studf] = await connection.query('select s.first_name as first_name, s.last_name, s.sapid from student s inner join department d on s.did = d.did where d.dname = ?  ORDER BY ' + tag + ' ' + order, [dname]);
-    console.log(stud)
-    res.status(200).json(stud);
+ 
+    console.log("check",tag,order,dname)
+   const [stud, studf] = await connection.query(`call egS('${dname}','${tag}','${order}')`);
+    
+   
+    res.status(200).json(stud[0]);
+}
+exports.deleteADepartmentStudent = async(req, res) => {
+   
+    const connection = req.app.get('connection');
+    var { sapid } = req.query;
+    var { dname } = req.params;
+    const [rows, fields] = await connection.query('delete from student where sapid = ?',[sapid]);
+    res.status(200).json(rows);
+}
+exports.deleteADepartmentCourse = async(req, res) => {
+   
+    const connection = req.app.get('connection');
+    var { courseid } = req.query;
+    var { dname } = req.params;
+    const [rows, fields] = await connection.query('delete from course where courseid = ?',[courseid]);
+    res.status(200).json(rows);
+}
+exports.deleteADepartmentFaculty = async(req, res) => {
+   
+    const connection = req.app.get('connection');
+    var { fid } = req.query;
+    var { dname } = req.params;
+    const [rows, fields] = await connection.query('delete from faculty where fid = ?',[fid]);
+    res.status(200).json(rows);
 }
 
 exports.getADepartmentData = async(req, res) => {
@@ -53,7 +81,7 @@ exports.getADepartmentData = async(req, res) => {
             .map(word => word.charAt(0).toUpperCase() + word.slice(1))
             .join(' ');
     const [rowHod, fieldHod] = await connection.query(
-        'select f.fname, f.email from faculty f inner join department d on f.did = d.did where d.dname = ? and f.fid = d.hod', [dname])
+        'select f.fname, f.email, f.fid from faculty f inner join department d on f.did = d.did where d.dname = ? and f.fid = d.hod', [dname])
     const { fname, email } = rowHod[0];
     const [rowStudent, fieldStudent] = await connection.query(
         'select count(*) as noOfStudents from student s inner join department d on s.did = d.did where d.dname = ?', [dname]);
@@ -81,7 +109,7 @@ exports.getADepartmentCourse = async(req, res) => {
             .map(word => word.charAt(0).toUpperCase() + word.slice(1))
             .join(' ');
     const [rowCourse, fieldCourse] = await connection.query(
-        'select c.course_name as course_name, c.credits as credits, f.fname as fname from (course c inner join teaches t on c.courseid = t.courseid) inner join (faculty f  inner join department d on f.did = d.did) where f.fid = t.fid and d.dname = ? ORDER BY ' + tag + ' ' + order, [dname]);
+        'select c.course_name as course_name, c.credits as credits, f.fname as fname, c.courseid as courseid from (course c inner join teaches t on c.courseid = t.courseid) inner join (faculty f  inner join department d on f.did = d.did) where f.fid = t.fid and d.dname = ? ORDER BY ' + tag + ' ' + order, [dname]);
     res.status(200).json(rowCourse);
 }
 
@@ -96,7 +124,7 @@ exports.searchACourse = async(req, res) => {
             .join(' ');
     filter = '%' + filter + '%';
     const [rows, fields] = await connection.query(
-        'select c.course_name as course_name, c.credits as credits, f.fname as fname from (course c inner join teaches t on c.courseid = t.courseid) inner join (faculty f  inner join department d on f.did = d.did) where f.fid = t.fid and d.dname = ? and c.course_name LIKE ?', [dname, filter])
+        'select c.course_name as course_name,c.courseid as courseid, c.credits as credits, f.fname as fname from (course c inner join teaches t on c.courseid = t.courseid) inner join (faculty f  inner join department d on f.did = d.did) where f.fid = t.fid and d.dname = ? and c.course_name LIKE ?', [dname, filter])
     res.status(200).json(rows);
 }
 

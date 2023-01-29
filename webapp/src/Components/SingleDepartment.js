@@ -4,6 +4,8 @@ import { Col, Row } from "react-bootstrap";
 import departmentLogo from "../images/department-lg.png";
 import switchOrder from "../images/switch-order-logo.png";
 import vector from "../images/Vector.png";
+import _ from "lodash";
+import { Link } from "react-router-dom";
 
 function SingleDepartment() {
   const [action, setAction] = useState(0);
@@ -30,7 +32,35 @@ function SingleDepartment() {
   const displayStudent = () => {
     setAction(2);
   };
+  
+   const handleDeleteStudent = async(el) => {
+    try {
+      const department = window.location.href.slice(33);
+       await fetch(`http://localhost:8080/api/department/delete/${department}/student?sapid=${el.sapid}`).then((res) => {console.log(res)})
+       const updatedstudent = _.remove(student, function(n) { return n.sapid === el.sapid});
+      setStudent(updatedstudent);
+      window.location.reload(`/department/${department}`)
+    } catch (err) {
+     console.log(err)
+    }
+  }
+  //  const handleDeleteCourse= async(el) => {
+  //   try {
+  //     const department = window.location.href.slice(33);
+  //      await fetch(`http://localhost:8080/api/department/delete/${department}/course?courseid=${el.courseid}`).then((res) => {console.log(res)})
+  //   } catch (err) {
+  //     console.log(err)
+  //   }
+  // }
+  //  const handleDeleteFaculty = async(el) => {
+  //   try {
+  //     const department = window.location.href.slice(33);
+  //      await fetch(`http://localhost:8080/api/department/delete/${department}/faculty?fid=${el.fid}`).then((res) => {console.log(res)})
 
+  //   } catch (err) {
+  //    console.log(err)
+  //   }
+  // }
   async function getData() {
     try {
       const department = window.location.href.slice(33);
@@ -106,7 +136,14 @@ function SingleDepartment() {
   };
 
   useEffect(() => {
+    if(localStorage.getItem("role")==null){
+      window.alert("Please login First!")
+      window.location.replace("/")
+    }
+  
     getData();
+    if(searchVal === '')
+      getData();
     
   }, [noOfCourses, noOfFaculties, noOfStudents]);
   useEffect(() => {
@@ -148,7 +185,7 @@ function SingleDepartment() {
                   displayStudent()
                   setTag("first_name");
                 }} md={7}>
-              Students
+             <Link>Students</Link> 
             </Col>
           {
             <input
@@ -212,6 +249,9 @@ function SingleDepartment() {
                     </Col>
                     <Col>
                       <br></br>
+                      {/* { localStorage.getItem("role")=='1'?(<p className="float-right">
+                        <i class="fa fa-trash" aria-hidden="true" onClick={() => handleDeleteFaculty(el)} />
+                      </p>):null} */}
                       <p className="grid-title ">Associate Professor</p>
                       <p className="text-muted float-right mr-4">
                         {" "}
@@ -243,6 +283,9 @@ function SingleDepartment() {
                     </Col>
                     <Col>
                       <br></br>
+                      {/* { localStorage.getItem("role")=='1'?(<p className="float-right">
+                        <i class="fa fa-trash" aria-hidden="true" onClick={() => handleDeleteCourse(el)} />
+                      </p>):null} */}
                       <p className="grid-title ">{el.course_name}</p>
                       <p className="text-muted float-right mr-4">
                         {" "}
@@ -261,7 +304,7 @@ function SingleDepartment() {
             <div id="student">
               <Row className="homerow justify-content-md-center">
                 { student.length > 0 && student.map((el, id) => ( 
-                <Col md={5} key={id} className="pagegrid">
+                <Col md={5} key={id} className="pagegrid" style={{ border: "1px solid" }}>
                   <Row>
                     <Col md={1}>
                       <span>
@@ -274,6 +317,9 @@ function SingleDepartment() {
                     </Col>
                     <Col>
                       <br></br>
+                     { localStorage.getItem("role")=='1'?(<p className="float-right">
+                        <i class="fa fa-trash" aria-hidden="true" onClick={() => handleDeleteStudent(el)} />
+                      </p>):null}
                       <p className="grid-title ">{el.first_name} {el.last_name}</p>
                       <p className="text-muted float-right mr-4">
                         {" "}

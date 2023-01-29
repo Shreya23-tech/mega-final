@@ -79,6 +79,10 @@ function Library() {
   }
 
   useEffect(() => {
+    if(localStorage.getItem("role")==null){
+      window.alert("Please login First!")
+      window.location.replace("/")
+    }
     getCount();
     if(searchVal === '')
       getBooks();
@@ -100,11 +104,11 @@ function Library() {
             No. of Editions: <b>{noOfEditions}</b>
           </p>
           <br></br>
-          <Link to="/library/add">
+          {localStorage.getItem("role")=='2'?(<Link to="/library/add">
             <button className="add-btn" style={{border: "1px solid"}}>
               <i class="fa fa-plus mr-3" aria-hidden="true"></i>Add Book
             </button>
-          </Link>
+          </Link>):null}
         </Col>
         {/* <Col md={1}></Col> */}
         <Col className="rightside" md={8}>
@@ -162,12 +166,12 @@ function Library() {
                     </Col>
                     <Col>
                       <br></br>
-                      <p className="float-right">
+                      {localStorage.getItem("role")=='2'?(<p className="float-right">
                         <Link to={`/library/update/${el.bookid}`}>
                           <i class="fa fa-pencil mr-3" aria-hidden="true" />
                         </Link>
                         <i class="fa fa-trash" aria-hidden="true" onClick={() => handleDelete(el)} />
-                      </p>
+                      </p>):null}
                       <p className="grid-title ">{el.bname}</p>
                       <span style={{ float: "right" }}> - {el.author}</span>
                     </Col>

@@ -6,7 +6,7 @@ const dbConnection = async () => {
         host     : "localhost",
         user     : "root",
         password : "Shreya@2001",
-        database : "college_mgmtee123"
+        database : "user"
     });
 
     return connection;

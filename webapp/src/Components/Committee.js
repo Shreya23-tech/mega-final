@@ -71,6 +71,10 @@ function Committee() {
   };
 
   useEffect(() => {
+    if(localStorage.getItem("role")==null){
+      window.alert("Please login First!")
+      window.location.replace("/")
+    }
     getCount();
     getDepartments();
   }, [tag, order, noOfCommittees, noOfEvents, noOfVictories, noOfStudents]);

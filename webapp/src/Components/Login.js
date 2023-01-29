@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './Login.css';
+import '../Components/Login.css';
 import axios from 'axios';
 
 const LoginForm = () => {
@@ -9,8 +9,12 @@ const LoginForm = () => {
       { email: '', 
         password: '',
       role:''});
+
+      
 //state to hold generated error from the inputs
   const [err, setErr] = useState({});
+
+
   /*function to validate the inputs.
   If the username or password inputs are empty, an error message is generated
   the function returns the generated error.

@@ -6,8 +6,11 @@ import commiteeLogo from "../images/commiteeLogo.png";
 import libraryLogo from "../images/libraryLogo.png";
 import projectLogo from "../images/projectLogo.png";
 
+
 class Home extends Component {
+  
   render() {
+   
     return (
       <Container>
         <br></br>

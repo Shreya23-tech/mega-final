@@ -12,7 +12,7 @@ class TopNav extends Component {
   render() {
     return (
       <Navbar bg="dark" variant="dark" style={{maxHeight: "60px"}}>
-        <Link to="/">
+        <Link to="/home">
           <Navbar.Brand href="#home" className="navtitle">
             <img style={{width:"50px",borderRadius:"100%"}} src={logo}></img>
           </Navbar.Brand>

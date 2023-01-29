@@ -1,5 +1,5 @@
-create database college_mgmt;
-use college_mgmt;
+create database user;
+use user;
 create table department
 (
 	did int primary key not null,
@@ -14,7 +14,7 @@ create table student
     gender varchar(6) not null,
     dob date,
     did int,
-    email varchar(10),
+    email varchar(50),
     pass varchar(10),
     foreign key(did) references department(did)
 );
@@ -24,12 +24,11 @@ create table faculty
     fname varchar(50),
     salary decimal(8,2),
     email varchar(50),
-    pass varchar(10),
     did int,
-    role int, //1 hod //2 librarian //3 teacher
+    pass varchar(10),
+    role int, 
     foreign key(did) references department(did)
 );
-
 alter table department
 add hod int;
 
@@ -457,42 +456,11 @@ create table borrowed
     foreign key(bookid) references library(bookid)
 )
 
-DELIMITER $$
-CREATE TRIGGER lock_library_trigger
-    before INSERT
-    ON library FOR EACH ROW
+
+DELIMITER //
+CREATE PROCEDURE eg(IN name varchar(10),tag varchar(10), order varchar(10))
 BEGIN
-    lock tables library read;
-END$$    
+select s.first_name as first_name, s.last_name, s.sapid from student s inner join department d on s.did = d.did where d.dname = name  ORDER BY tag order
+END //
 DELIMITER ;
-
-DELIMITER $$
-CREATE TRIGGER unlock_library_trigger
-    after INSERT
-    ON library FOR EACH ROW
-BEGIN
-    unlock tables;
-END$$    
-DELIMITER ;
-
-CREATE PROCEDURE GetBookDetails (@BOOKID INT)
-AS
-BEGIN
-    SELECT * FROM books
-    WHERE BOOKID = @BOOKID;
-END
-
-CREATE PROCEDURE GetFacultyDetails (@facID INT)
-AS
-BEGIN
-    SELECT * FROM books
-    WHERE fid = @facID;
-END
-
-CREATE PROCEDURE GetStudentDetails (@sapID INT)
-AS
-BEGIN
-    SELECT * FROM student
-    WHERE sapid = @sapID;
-END
 
