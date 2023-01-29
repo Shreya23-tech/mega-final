@@ -5,6 +5,7 @@ const departmentRouter = require('./department');
 const committeeRouter = require('./committee');
 const libraryRouter = require('./library');
 
+
 module.exports = {
     facultyRouter,
     studentRouter,

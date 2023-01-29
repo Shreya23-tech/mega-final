@@ -4,8 +4,9 @@ import Nav from "react-bootstrap/Nav";
 import Form from "react-bootstrap/Form";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import { Link } from "react-router-dom";
+import logo from "../images/logo_791.jpg"
 
-import djs from "../images/djs.png";
+// import djs from "../images/djs.png";
 
 class TopNav extends Component {
   render() {
@@ -13,7 +14,7 @@ class TopNav extends Component {
       <Navbar bg="dark" variant="dark" style={{maxHeight: "60px"}}>
         <Link to="/">
           <Navbar.Brand href="#home" className="navtitle">
-            <img src={djs} alt="" />
+            <img style={{width:"50px",borderRadius:"100%"}} src={logo}></img>
           </Navbar.Brand>
         </Link>
 

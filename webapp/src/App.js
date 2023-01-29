@@ -11,6 +11,7 @@ import Contact from "./Components/Contact";
 import SingleDepartment from "./Components/SingleDepartment";
 import AddBook from "./Components/AddBook";
 import About from "./Components/About";
+import Login from "./Components/Login";
 
 import { Route, BrowserRouter as Router } from "react-router-dom";
 
@@ -30,7 +31,7 @@ function App() {
     <div className="App">
       <Router>
         <TopNav />
-        <Route exact path="/" component={renderHome} />
+        <Route exact path="/" component={Login} />
         <Route exact path="/library" component={renderLibrary} />
         <Route exact path="/projects" component={renderProject} />
         <Route exact path="/departments" component={renderDepartment} />
@@ -47,6 +48,7 @@ function App() {
           path="/library/update/:bookid"
           component={renderUpdateBook}
         />
+        <Route exact path="/home" component={renderHome} />
         <Route exact path="/about-us" component={renderAbout} />
 
         <Footer />

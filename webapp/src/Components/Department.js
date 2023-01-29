@@ -31,6 +31,7 @@ function Department() {
       const doc = await fetch(`/api/department?tag=${tag}&order=${order}`);
       const departments = await doc.json();
       setDepartments(departments);
+      console.log("1",departments)
     } catch (err) {
       console.log(err);
     }
@@ -48,10 +49,12 @@ function Department() {
       );
       const result = await doc.json();
       setDepartments(result);
+      console.log("2",result)
     } else {
       const doc = await fetch(`/api/department?tag=dname`);
       const result = await doc.json();
       setDepartments(result);
+      console.log("3",result)
     }
   };
   const handleKeyDown = async (e) => {

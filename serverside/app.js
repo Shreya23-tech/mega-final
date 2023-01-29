@@ -4,7 +4,8 @@ const cors = require('cors');
 const { dbConnection } = require('./config/db');
 const { port } = require('./config/constants');
 const { options } = require('./config/middleware');
-const { facultyRouter, studentRouter, projectRouter, departmentRouter, committeeRouter, libraryRouter } = require('./routes/index');
+const { facultyRouter, studentRouter, projectRouter, departmentRouter, committeeRouter, libraryRouter} = require('./routes/index');
+const {loginRouter}=require('./controllers/login')
 const app = express();
 
 async function main() {
@@ -26,7 +27,7 @@ async function main() {
     app.use('/api/department', departmentRouter);
     app.use('/api/committee', committeeRouter);
     app.use('/api/library', libraryRouter);
-
+    app.use('/login',loginRouter);
     return app;
 }
 

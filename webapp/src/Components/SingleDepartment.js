@@ -6,7 +6,7 @@ import switchOrder from "../images/switch-order-logo.png";
 import vector from "../images/Vector.png";
 
 function SingleDepartment() {
-  const [action, setAction] = useState(true);
+  const [action, setAction] = useState(0);
   const [tag, setTag] = useState("fname");
   const [order, setOrder] = useState("1");
   const [dname, setDname] = useState("");
@@ -16,14 +16,19 @@ function SingleDepartment() {
   const [noOfStudents, setStudentNo] = useState(0);
   const [department, setDepartment] = useState([]);
   const [course, setCourse] = useState([]);
+  const [student, setStudent] = useState([]);
   const [searchVal, setSearchVal] = useState("");
 
   const displayCourse = () => {
-    setAction(false);
+    setAction(1);
   };
 
   const displayFaculty = () => {
-    setAction(true);
+    setAction(0);
+  };
+
+  const displayStudent = () => {
+    setAction(2);
   };
 
   async function getData() {
@@ -36,7 +41,8 @@ function SingleDepartment() {
       setCourseNo(noOfCourses);
       setFacultyNo(noOfFaculties);
       setStudentNo(noOfStudents);
-    } catch (err) {
+    } 
+    catch (err) {
       console.log(err);
     }
   }
@@ -44,16 +50,26 @@ function SingleDepartment() {
   async function getDepartment() {
     try {
       const dname = window.location.href.slice(33);
-      if(action) {        
+      if(action==0) {        
         const doc = await fetch(`/api/department/get/${dname}?tag=${tag}&order=${order}`);
         const department = await doc.json();
         setDepartment(department);
+        console.log("1",department)
       }      
-      else {
+      else if(action==1) {
+        console.log("1",tag)
         const doc = await fetch(`/api/department/get/${dname}/course?tag=${tag}&order=${order}`);
         const course = await doc.json();
         setCourse(course);
+        console.log("2",course)
       }      
+      else{
+        console.log("1",tag)
+        const doc = await fetch(`/api/department/get/${dname}/student?tag=${tag}&order=${order}`);
+        const stud = await doc.json();
+        setStudent(stud);
+        console.log("3",stud)
+      }
     } catch (err) {
       console.log(err);
     }
@@ -71,10 +87,12 @@ function SingleDepartment() {
       );
       const result = await doc.json();
       setCourse(result);
+      console.log("3",result);
     } else {
       const doc = await fetch(`/api/department/get/${dname}/course?tag=${tag}&order=${order}`);
       const result = await doc.json();
       setCourse(result);
+      console.log("4",result)
     }
   };
   const handleKeyDown = async (e) => {
@@ -126,7 +144,13 @@ function SingleDepartment() {
                 }} className="mr-auto" md={1}>
               Courses
             </Col>
-          {!action &&
+            <Col onClick={() => {
+                  displayStudent()
+                  setTag("first_name");
+                }} md={7}>
+              Students
+            </Col>
+          {
             <input
                 className="search"
                 type="text"
@@ -143,7 +167,7 @@ function SingleDepartment() {
           <hr></hr>
           {/* FACULTY */}
 
-          {action ? (
+          {action==0 ? (
             <div id="faculty">
               {/* MAIN */}
               <Row className="homerow justify-content-md-center">                
@@ -202,7 +226,7 @@ function SingleDepartment() {
                 ))}
               </Row>
             </div>
-          ) : (
+          ) : action==1?(
             <div id="courses">
               <Row className="homerow justify-content-md-center">
                 { course.length > 0 && course.map((el, id) => ( 
@@ -228,6 +252,37 @@ function SingleDepartment() {
                   </Row>
                   <p style={{ position: "absolute", bottom: "0" }}>
                     Credits: {el.credits}
+                  </p>
+                </Col>
+                ))}
+              </Row>
+            </div>
+          ):(
+            <div id="student">
+              <Row className="homerow justify-content-md-center">
+                { student.length > 0 && student.map((el, id) => ( 
+                <Col md={5} key={id} className="pagegrid">
+                  <Row>
+                    <Col md={1}>
+                      <span>
+                        <img
+                          style={{ marginTop: "30px" }}
+                          src={vector}
+                          alt=""
+                        />
+                      </span>
+                    </Col>
+                    <Col>
+                      <br></br>
+                      <p className="grid-title ">{el.first_name} {el.last_name}</p>
+                      <p className="text-muted float-right mr-4">
+                        {" "}
+                        - {el.first_name}
+                      </p>
+                    </Col>
+                  </Row>
+                  <p style={{ position: "absolute", bottom: "0" }}>
+                    ID: {el.sapid}
                   </p>
                 </Col>
                 ))}

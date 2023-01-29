@@ -3,10 +3,10 @@ const { host, user, password, database } = require('./constants');
 
 const dbConnection = async () => {
     const connection = await mysql.createConnection({
-        host     : host,
-        user     : user,
-        password : password,
-        database : database
+        host     : "localhost",
+        user     : "root",
+        password : "Shreya@2001",
+        database : "college_mgmtee123"
     });
 
     return connection;

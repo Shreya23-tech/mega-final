@@ -6,7 +6,7 @@ function AddBook(props) {
   const [bname, setBname] = useState("");
   const [author, setAuthor] = useState("");
   const [edition, setEdition] = useState("");
-
+  const[role,setrole]=useState("")
   const handleAuthor = (e) => {
     setAuthor(e.target.value);
   };
@@ -15,6 +15,12 @@ function AddBook(props) {
     setBname(e.target.value);
   };
 
+  useEffect(() => {
+    if(localStorage.getItem(role)!='2'){
+      window.alert("You do not have the access")
+      return window.location.replace('/library')
+    }
+  },[])
   const handleEdition = (e) => {
     setEdition(e.target.value);
   };
@@ -27,8 +33,7 @@ function AddBook(props) {
       var feedback_div = document.getElementById("feedback");
       feedback_div.innerHTML = "";
       if (bname === "" || author === "" || editionNo === "") {
-        var error =
-          "<p class='alert alert-danger'>Please enter the missing values</p>";
+        window.alert("Enter the empty credentials");
       } else {
         if (isInteger(editionNo)) {
           var error = "";
@@ -73,6 +78,7 @@ function AddBook(props) {
 
   useEffect(() => {
     const slug = window.location.href.slice(30).toUpperCase();
+    setrole(localStorage.getItem(role))
     setAction(slug);
     if (slug !== "ADD") {
       getBook(slug.slice(7));
@@ -86,8 +92,8 @@ function AddBook(props) {
       <h2>LIBRARY REPOSITORY</h2>
       <br></br>
       <div className="center-div" style={{ border: "1px solid" }}>
-        {action === "ADD" && <h3>ADD A BOOK</h3>}
-        {action !== "ADD" && <h3>UPDATE A BOOK</h3>}
+        {action === "ADD" && role=='2' &&  <h3>ADD A BOOK</h3>}
+        {action !== "ADD" && role =='2' && <h3>UPDATE A BOOK</h3>}
         <br></br>
         <div id="feedback"></div>
         <br></br>
@@ -134,12 +140,12 @@ function AddBook(props) {
         </div>
 
         <br></br>
-        {action === "ADD" && (
+        {action === "ADD" && role=='2' && (
           <button class="create-btn" onClick={handleSubmit}>
             CREATE
           </button>
         )}
-        {action !== "ADD" && (
+        {action !== "ADD" && role=='2' && (
           <button class="create-btn" onClick={handleSubmit}>
             UPDATE
           </button>

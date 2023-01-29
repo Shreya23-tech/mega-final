@@ -27,6 +27,22 @@ exports.getADepartment = async(req, res) => {
     const [rows, fields] = await connection.query('select f.fname, f.email from faculty f inner join department d on f.did = d.did where d.dname = ? and f.fid != d.hod ORDER BY ' + tag + ' ' + order, [dname]);
     res.status(200).json(rows);
 }
+exports.getADepartmentStudent = async(req, res) => {
+    const connection = req.app.get('connection');
+    var { tag, order } = req.query;
+    var { dname } = req.params;
+    dname = dname
+            .replace(/-/g, ' ')
+            .split(' ')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
+            console.log(dname);
+    order = order === '-1' ? 'DESC': 'ASC';
+    //const [rows, fields] = await connection.query('select f.fname, f.email from faculty f inner join department d on f.did = d.did where d.dname = ? and f.fid != d.hod ORDER BY ' + tag + ' ' + order, [dname]);
+    const [stud, studf] = await connection.query('select s.first_name as first_name, s.last_name, s.sapid from student s inner join department d on s.did = d.did where d.dname = ?  ORDER BY ' + tag + ' ' + order, [dname]);
+    console.log(stud)
+    res.status(200).json(stud);
+}
 
 exports.getADepartmentData = async(req, res) => {
     const connection = req.app.get('connection');
@@ -48,6 +64,9 @@ exports.getADepartmentData = async(req, res) => {
     const [rowCourse, fieldCourse] = await connection.query(
         'select count(*) as noOfCourses from course c inner join department d on c.did = d.did where d.dname = ?', [dname]);
     const { noOfCourses } = rowCourse[0];
+    console.log("ew",dname)
+   // const [stud, studf] = await connection.query('select s.first_name, s.last_name, s.sapid from student s inner join department d on s.did = d.did where d.dname = ?  ORDER BY ' + tag + ' ' + order, [dname]);
+   
     res.status(200).json({ dname, fname, email, noOfCourses, noOfStudents, noOfFaculties });
 }
 
